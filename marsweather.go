@@ -40,26 +40,29 @@ func NewMaas() *Maas {
 }
 
 // GetLatest retrives the latest MAAS data.  Returns a MaasReport.
-func (m *Maas) GetLatest() MaasReport {
-	data := m.getLatestData()
-	var report MaasReport
-	err := json.Unmarshal(data, &report)
+func (m *Maas) GetLatest() (MaasReport, error) {
+	data, err := m.getLatestData()
 	if err != nil {
-		panic(err)
+		return MaasReport{}, err
 	}
-	return report
+	var report MaasReport
+	err = json.Unmarshal(data, &report)
+	if err != nil {
+		return MaasReport{}, err
+	}
+	return report, nil
 }
 
 // getLatestData is the MAAS HTTP client.  Returns the HTTP body.
-func (m *Maas) getLatestData() []byte {
+func (m *Maas) getLatestData() ([]byte, error) {
 	resp, err := http.Get(EndpointLatest)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return body
+	return body, nil
 }

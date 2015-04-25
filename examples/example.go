@@ -3,11 +3,16 @@ package main
 import (
 	"fmt"
 	"github.com/russmack/marsweather"
+	"os"
 )
 
 func main() {
 	maas := marsweather.NewMaas()
-	maasReport := maas.GetLatest()
+	maasReport, err := maas.GetLatest()
+	if err != nil {
+		fmt.Println("Well, we got the data from Mars to Earth, but...", err)
+		os.Exit(1)
+	}
 	fmt.Println("Curiosity Sol number:", maasReport.Report.CuriositySolNumber)
 	fmt.Println("Atmospheric opacity:", maasReport.Report.AtmosphericOpacity)
 	fmt.Println("Max temp (C):", maasReport.Report.MaxTemp)
