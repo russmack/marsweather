@@ -13,6 +13,7 @@ func main() {
 		fmt.Println("Well, we got the data from Mars to Earth, but...", err)
 		os.Exit(1)
 	}
+	fmt.Println("Latest:")
 	fmt.Println("Curiosity Sol number:", maasReport.Report.CuriositySolNumber)
 	fmt.Println("Atmospheric opacity:", maasReport.Report.AtmosphericOpacity)
 	fmt.Println("Max temp (C):", maasReport.Report.MaxTemp)
@@ -23,4 +24,23 @@ func main() {
 	fmt.Println("Absolute humidity:", maasReport.Report.AbsHumidity)
 	fmt.Println("Terrestrial date:", maasReport.Report.TerrestrialDate)
 	fmt.Println("Seasonal date:", maasReport.Report.SeasonalDate)
+
+	page := 2
+	p, err := maas.GetArchivePage(page)
+	if err != nil {
+		fmt.Println("Error getting archive data.", err)
+		os.Exit(1)
+	}
+	fmt.Println("")
+	fmt.Printf("Archive Data Page %v\n", page)
+	fmt.Println("Count:", p.Count)
+	fmt.Println("Next:", p.Next)
+	fmt.Println("Previous:", p.Previous)
+	fmt.Println("Results:")
+	for _, j := range p.Results {
+		fmt.Println("Terrestrial data:", j.TerrestrialDate)
+		fmt.Println("Max Temp:", j.MaxTemp)
+		fmt.Println("Min Temp:", j.MinTemp)
+		fmt.Println("")
+	}
 }
