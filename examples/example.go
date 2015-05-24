@@ -43,4 +43,12 @@ func main() {
 		fmt.Println("Min Temp:", j.MinTemp)
 		fmt.Println("")
 	}
+
+	d, err := maas.GetArchiveDateRange("2015-04-19", "2015-04-21")
+	if err != nil {
+		fmt.Println("Error getting archive date range.", err)
+		os.Exit(1)
+	}
+	fmt.Println("Archive date range:")
+	fmt.Println(d)
 }

@@ -12,6 +12,8 @@ import (
 const (
 	EndpointLatest      = "http://marsweather.ingenology.com/v1/latest/"
 	EndpointArchivePage = "http://marsweather.ingenology.com/v1/archive/?page=%d"
+	//EndpointArchiveFilterDate = "http://marsweather.ingenology.com/v1/archive/?terrestrial_date_start=2012-10-01&terrestrial_date_end=2012-10-31"
+	EndpointArchiveDateRange = "http://marsweather.ingenology.com/v1/archive/?terrestrial_date_start=%s&terrestrial_date_end=%s"
 )
 
 // Maas is the primary type for Ingenology's MAAS REST api.
@@ -63,9 +65,23 @@ func (m *Maas) GetLatest() (MaasReport, error) {
 	return report, nil
 }
 
-// getArchivePage gets a specified page from the archive data.
+// GetArchivePage gets a specified page from the archive data.
 func (m *Maas) GetArchivePage(page int) (MaasArchivePage, error) {
 	data, err := m.getData(fmt.Sprintf(EndpointArchivePage, page))
+	if err != nil {
+		return MaasArchivePage{}, err
+	}
+	var p MaasArchivePage
+	err = json.Unmarshal(data, &p)
+	if err != nil {
+		return MaasArchivePage{}, err
+	}
+	return p, nil
+}
+
+// GetArchiveDateRange gets a specified date range from the archive data.
+func (m *Maas) GetArchiveDateRange(fromDate string, toDate string) (MaasArchivePage, error) {
+	data, err := m.getData(fmt.Sprintf(EndpointArchiveDateRange, fromDate, toDate))
 	if err != nil {
 		return MaasArchivePage{}, err
 	}
