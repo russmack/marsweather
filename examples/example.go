@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/russmack/marsweather"
 	"os"
+	"time"
 )
 
 func main() {
@@ -44,11 +45,15 @@ func main() {
 		fmt.Println("")
 	}
 
-	d, err := maas.GetArchiveDateRange("2015-04-19", "2015-04-21")
+	fromDate := time.Date(2015, time.April, 19, 0, 0, 0, 0, time.UTC)
+	toDate := time.Date(2015, time.April, 22, 0, 0, 0, 0, time.UTC)
+	d, err := maas.GetArchiveDateRange(fromDate, toDate)
 	if err != nil {
 		fmt.Println("Error getting archive date range.", err)
 		os.Exit(1)
 	}
 	fmt.Println("Archive date range:")
-	fmt.Println(d)
+	for _, j := range d.Results {
+		fmt.Println(j)
+	}
 }

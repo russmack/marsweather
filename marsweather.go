@@ -7,12 +7,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 const (
-	EndpointLatest      = "http://marsweather.ingenology.com/v1/latest/"
-	EndpointArchivePage = "http://marsweather.ingenology.com/v1/archive/?page=%d"
-	//EndpointArchiveFilterDate = "http://marsweather.ingenology.com/v1/archive/?terrestrial_date_start=2012-10-01&terrestrial_date_end=2012-10-31"
+	EndpointLatest           = "http://marsweather.ingenology.com/v1/latest/"
+	EndpointArchivePage      = "http://marsweather.ingenology.com/v1/archive/?page=%d"
 	EndpointArchiveDateRange = "http://marsweather.ingenology.com/v1/archive/?terrestrial_date_start=%s&terrestrial_date_end=%s"
 )
 
@@ -80,8 +80,11 @@ func (m *Maas) GetArchivePage(page int) (MaasArchivePage, error) {
 }
 
 // GetArchiveDateRange gets a specified date range from the archive data.
-func (m *Maas) GetArchiveDateRange(fromDate string, toDate string) (MaasArchivePage, error) {
-	data, err := m.getData(fmt.Sprintf(EndpointArchiveDateRange, fromDate, toDate))
+func (m *Maas) GetArchiveDateRange(fromDate time.Time, toDate time.Time) (MaasArchivePage, error) {
+	dateFormat := "2006-01-02"
+	sFrom := fromDate.Format(dateFormat)
+	sTo := toDate.Format(dateFormat)
+	data, err := m.getData(fmt.Sprintf(EndpointArchiveDateRange, sFrom, sTo))
 	if err != nil {
 		return MaasArchivePage{}, err
 	}
