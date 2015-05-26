@@ -17,7 +17,9 @@ const (
 )
 
 // Maas is the primary type for Ingenology's MAAS REST api.
-type Maas struct{}
+type Maas struct {
+	HttpClient *http.Client
+}
 type MaasReport struct {
 	Report Report `json:"report"`
 }
@@ -47,8 +49,13 @@ type Report struct {
 }
 
 // NewMaas returns a new instance of a Maas.
-func NewMaas() *Maas {
-	return &Maas{}
+func NewMaas(httpClient *http.Client) *Maas {
+	http := &http.Client{}
+	if httpClient != nil {
+		http = httpClient
+	}
+	maas := Maas{HttpClient: http}
+	return &maas
 }
 
 // GetLatest retrives the latest MAAS data.  Returns a MaasReport.
@@ -98,7 +105,7 @@ func (m *Maas) GetArchiveDateRange(fromDate time.Time, toDate time.Time) (MaasAr
 
 // getData is the MAAS HTTP client.  Returns the HTTP body.
 func (m *Maas) getData(endpoint string) ([]byte, error) {
-	resp, err := http.Get(endpoint)
+	resp, err := m.HttpClient.Get(endpoint)
 	if err != nil {
 		return nil, err
 	}

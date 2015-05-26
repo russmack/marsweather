@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 	"github.com/russmack/marsweather"
+	"net/http"
 	"os"
 	"time"
 )
 
 func main() {
-	maas := marsweather.NewMaas()
+	maas := marsweather.NewMaas(nil)
 	maasReport, err := maas.GetLatest()
 	if err != nil {
 		fmt.Println("Well, we got the data from Mars to Earth, but...", err)
