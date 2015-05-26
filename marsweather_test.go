@@ -3,7 +3,6 @@ package marsweather
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -47,8 +46,7 @@ func TestGetLatest(t *testing.T) {
 	maas := NewMaas(httpClient)
 	actual, err := maas.GetLatest()
 	if err != nil {
-		log.Println("Error calling GetLatest.", err)
-		t.Fail()
+		t.Fatalf("Error calling GetLatest. %v", err)
 	}
 
 	expectedJson := `{
@@ -75,13 +73,55 @@ func TestGetLatest(t *testing.T) {
 	expected := MaasReport{}
 	err = json.Unmarshal([]byte(expectedJson), &expected)
 	if err != nil {
-		log.Println("Error creating expected response object.", err)
-		t.Fail()
+		t.Fatalf("Error creating expected response object. %v", err)
 	}
 
-	if actual.Report.CuriositySolNumber != expected.Report.CuriositySolNumber ||
-		actual.Report.SeasonalDate != expected.Report.SeasonalDate ||
-		actual.Report.MinTemp != expected.Report.MinTemp {
-		t.Fail()
+	if actual.Report.TerrestrialDate != expected.Report.TerrestrialDate {
+		t.Errorf("Wrong TerrestrialDate.")
+	}
+	if actual.Report.CuriositySolNumber != expected.Report.CuriositySolNumber {
+		t.Errorf("Wrong CuriositySolNumber.")
+	}
+	if actual.Report.SeasonalDate != expected.Report.SeasonalDate {
+		t.Errorf("Wrong SeasonalDate.")
+	}
+	if actual.Report.MinTemp != expected.Report.MinTemp {
+		t.Errorf("Wrong MinTemp.")
+	}
+	if actual.Report.MinTempFahrenheit != expected.Report.MinTempFahrenheit {
+		t.Errorf("Wrong MinTempFahrenheit.")
+	}
+	if actual.Report.MaxTemp != expected.Report.MaxTemp {
+		t.Errorf("Wrong MaxTemp.")
+	}
+	if actual.Report.MaxTempFahrenheit != expected.Report.MaxTempFahrenheit {
+		t.Errorf("Wrong MaxTempFahrenheit.")
+	}
+	if actual.Report.Pressure != expected.Report.Pressure {
+		t.Errorf("Wrong Pressure.")
+	}
+	if actual.Report.PressureString != expected.Report.PressureString {
+		t.Errorf("Wrong PressureString.")
+	}
+	if actual.Report.AbsHumidity != expected.Report.AbsHumidity {
+		t.Errorf("Wrong AbsHumidity.")
+	}
+	if actual.Report.WindSpeed != expected.Report.WindSpeed {
+		t.Errorf("Wrong WindSpeed.")
+	}
+	if actual.Report.WindDirection != expected.Report.WindDirection {
+		t.Errorf("Wrong WindDirection.")
+	}
+	if actual.Report.AtmosphericOpacity != expected.Report.AtmosphericOpacity {
+		t.Errorf("Wrong AtmosphericOpacity.")
+	}
+	if actual.Report.Season != expected.Report.Season {
+		t.Errorf("Wrong Season.")
+	}
+	if actual.Report.Sunrise != expected.Report.Sunrise {
+		t.Errorf("Wrong Sunrise.")
+	}
+	if actual.Report.Sunset != expected.Report.Sunset {
+		t.Errorf("Wrong Sunset.")
 	}
 }
