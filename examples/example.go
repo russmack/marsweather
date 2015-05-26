@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/russmack/marsweather"
-	"net/http"
 	"os"
 	"time"
 )
